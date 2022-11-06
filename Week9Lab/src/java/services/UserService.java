@@ -6,9 +6,7 @@ import java.util.List;
 import dataaccess.UserDB;
 import models.Role;
 
-
 public class UserService {
-    
 
     public User get(String email) throws Exception {
         UserDB db = new UserDB();
@@ -19,15 +17,20 @@ public class UserService {
     public List<User> getAll() throws Exception {
         UserDB db = new UserDB();
         List<User> users = db.getAll();
-        
+
         return users;
     }
 
     public void update(String email, String first_name, String last_name, String password, int roleId) throws Exception {
         UserDB db = new UserDB();
+        User user = db.get(email);
         RoleDB roleDB = new RoleDB();
         Role role = roleDB.getRole(roleId);
-        User user = new User(email, first_name, last_name, password, role);
+
+        user.setFirstName(first_name);
+        user.setLastName(last_name);
+        user.setPassword(password);
+        user.setRole(role);
         db.update(user);
     }
 
@@ -39,9 +42,12 @@ public class UserService {
 
     public void insert(String email, String first_name, String last_name, String password, int roleId) throws Exception {
         UserDB db = new UserDB();
+        
+        User user = new User(email, first_name, last_name, password);
         RoleDB roleDB = new RoleDB();
         Role role = roleDB.getRole(roleId);
-        User user = new User(email, first_name, last_name, password, role);
+        user.setRole(role);
+
         db.insert(user);
     }
 
